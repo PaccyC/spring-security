@@ -45,6 +45,7 @@ public class WebSecurityConfig {
                     Collections.singleton(new SimpleGrantedAuthority("ROLE USER")))
     );
 
+//    Password Encoder
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(11);
