@@ -29,7 +29,7 @@ import java.util.List;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class WebSecurityConfig {
-    private  final UserDetailsS userDetailsS;
+    private final UserDetailsS userDetailsS;
 
     private static final String[] WHITE_LIST_URLS = {
             "/hello",
@@ -38,14 +38,14 @@ public class WebSecurityConfig {
     private final JwtAuthFilter jwtAuthFilter;
     private final static List<UserDetails> APPLICATION_USERS = Arrays.asList(
             new User("paccy@gmail.com",
-                    "password",
+                     "password",
                     Collections.singleton(new SimpleGrantedAuthority("ROLE ADMIN"))),
             new User("user@gmail.com",
                     "password",
                     Collections.singleton(new SimpleGrantedAuthority("ROLE USER")))
     );
 
-//    Password Encoder
+    //    Password Encoder
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(11);
@@ -55,11 +55,9 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
 
         httpSecurity.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(request ->
-                        request.requestMatchers("/**/auth/**").permitAll()
+                        request.requestMatchers("/api/auth/**").permitAll()
                 )
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
+                .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 

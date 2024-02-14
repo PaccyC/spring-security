@@ -19,7 +19,7 @@ public class UserDetailsServiceImpl implements UserDetailsS {
             public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
                 return APPLICATION_USERS
                         .stream()
-                        .filter(u-> u.getUsername().equals(email))
+                        .filter(u-> u.getUsername().equals(email) )
                         .findFirst()
                         .orElseThrow(()->new UsernameNotFoundException("No user was found"));
             }
