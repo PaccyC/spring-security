@@ -1,38 +1,62 @@
 package com.paccy.springsecurityclient.service;
 
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import com.paccy.springsecurityclient.entity.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+//@Service
+//public class UserDetailsServiceImpl implements UserDetailsS {
+//    @Override
+//    public UserDetailsService userDetailsService() {
+//        return  new UserDetailsService() {
+//            @Override
+//            public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+//                return APPLICATION_USERS
+//                        .stream()
+//                        .filter(u-> u.getUsername().equals(email) )
+//                        .findFirst()
+//                        .orElseThrow(()->new UsernameNotFoundException("No user was found"));
+//            }
+//        };
+//    }
+//
+//
+//
+//}
+
+
+import com.paccy.springsecurityclient.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.swing.text.html.Option;
+import java.util.Optional;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsS {
-    @Override
-    public UserDetailsService userDetailsService() {
-        return  new UserDetailsService() {
-            @Override
-            public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-                return APPLICATION_USERS
-                        .stream()
-                        .filter(u-> u.getUsername().equals(email) )
-                        .findFirst()
-                        .orElseThrow(()->new UsernameNotFoundException("No user was found"));
-            }
-        };
+
+    private final UserRepository userRepository;
+
+    @Autowired
+    public UserDetailsServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
+//    @Override
+//    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+//        Optional<User> user = userRepository.findByEmail(email);
+//
+//        return org.springframework.security.core.userdetails.User
+//                .withUsername(user.getEmail())
+//                .password(user.getPassword())
+//
+//                .build();
+//    }
 
-    private final static List<UserDetails> APPLICATION_USERS= Arrays.asList(
-            new org.springframework.security.core.userdetails.User("paccy@gmail.com",
-                    "password",
-                    Collections.singleton(new SimpleGrantedAuthority("ROLE ADMIN"))),
-            new org.springframework.security.core.userdetails.User("user@gmail.com",
-                    "password",
-                    Collections.singleton(new SimpleGrantedAuthority("ROLE USER")))
-    );
+    @Override
+    public UserDetailsService userDetailsService() {
+        return username -> userRepository.findByEmail(username).orElseThrow(()-> new UsernameNotFoundException("username not found"));
+    }
 }
+

@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,11 +30,14 @@ public class AuthenticationController {
             @RequestBody AuthenticationRequest request
     ) {
         try {
-            authenticationManager.authenticate(
+            Authentication aut= authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
             );
+            aut.isAuthenticated();
+            log.info(aut.toString());
             final UserDetails user = userDetailsS.userDetailsService().loadUserByUsername(request.getEmail());
             log.info(user.toString());
+     jwtUtils.generateToken(user);
             return ResponseEntity.ok().body("successfully login ");
 
         } catch (Exception ex) {

@@ -36,14 +36,7 @@ public class WebSecurityConfig {
             "/register"
     };
     private final JwtAuthFilter jwtAuthFilter;
-    private final static List<UserDetails> APPLICATION_USERS = Arrays.asList(
-            new User("paccy@gmail.com",
-                     "password",
-                    Collections.singleton(new SimpleGrantedAuthority("ROLE ADMIN"))),
-            new User("user@gmail.com",
-                    "password",
-                    Collections.singleton(new SimpleGrantedAuthority("ROLE USER")))
-    );
+//
 
     //    Password Encoder
     @Bean
@@ -55,7 +48,8 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
 
         httpSecurity.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(request ->
-                        request.requestMatchers("/api/auth/**").permitAll()
+                        request.requestMatchers("/api/**")
+                                .permitAll()
                 )
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())

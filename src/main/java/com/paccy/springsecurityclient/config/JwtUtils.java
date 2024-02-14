@@ -12,7 +12,7 @@ import java.util.function.Function;
 
 @Component
 public class JwtUtils {
-    private String signingKey="";
+    private String signingKey="ejkdsnxbfdcxjwehjasgzxiuerdojakznewdshu6zxh67hdsb9hf";
 
     public String extractUsername(String token){
         return extractClaim(token, Claims::getSubject);
