@@ -35,10 +35,15 @@ public class AuthenticationController {
             );
             aut.isAuthenticated();
             log.info(aut.toString());
-            final UserDetails user = userDetailsS.userDetailsService().loadUserByUsername(request.getEmail());
-            log.info(user.toString());
-     jwtUtils.generateToken(user);
-            return ResponseEntity.ok().body("successfully login ");
+            final UserDetails userDetails = userDetailsS.userDetailsService().loadUserByUsername(request.getEmail());
+            log.info(userDetails.toString());
+            String token=jwtUtils.generateToken(userDetails);
+
+            if (userDetails != null){
+            return   ResponseEntity.ok(token);
+            }
+
+            return ResponseEntity.status(400).body("Some error occured");
 
         } catch (Exception ex) {
             log.error(ex.toString());
